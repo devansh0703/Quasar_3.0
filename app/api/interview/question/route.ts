@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 // Hardcoded API keys (for demonstration only)
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 const OPENAI_API_BASE = "https://openrouter.ai/api/v1";
 const OPENROUTER_MODEL = "gpt-3.5-turbo";
 
@@ -37,7 +37,7 @@ Generate ONE concise, relevant technical question for the candidate. DO NOT incl
     const response = await openai.chat.completions.create({
       model: OPENROUTER_MODEL,
       messages: prompt,
-      temperature: 0,
+      temperature: 0.7,
     });
     const question = response.choices[0]?.message?.content || "Error: Could not generate question.";
     return NextResponse.json({ question });
