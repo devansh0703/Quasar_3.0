@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Interview from "./interview"
+import ExpressionAnalysis from "./expression";
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [analysisData, setAnalysisData] = useState<any>(null);
@@ -44,6 +45,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="w-full max-w-md">
+        <ExpressionAnalysis />
       <Interview />
         <h1 className="text-2xl font-bold mb-4">Resume Analyzer</h1>
         <input

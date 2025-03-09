@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 // Hardcoded API keys (for demonstration only)
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 const OPENAI_API_BASE = "https://openrouter.ai/api/v1";
-const OPENROUTER_MODEL = "deepseek/deepseek-r1-zero:free";
+const OPENROUTER_MODEL = "openai/gpt-3.5-turbo";
 
 // CORS headers to allow all headers
 const corsHeaders = {
@@ -71,7 +71,7 @@ ${history
   "confidence": (integer from 0 to 100),
   "decision": "(PASS or FAIL)"
 }
-Output only valid JSON. No extra text.
+Output only valid JSON. No extra text. DO NOT HALLUCINATE.
 
 Job Description: ${jobDescription}
 
