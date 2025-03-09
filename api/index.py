@@ -11,7 +11,7 @@ app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 llm = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0,
-    groq_api_key="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"
+    groq_api_key="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"
 )
 # Enable CORS for all origins
 app.add_middleware(
