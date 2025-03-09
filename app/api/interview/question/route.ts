@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 // Hardcoded API keys (for demonstration only)
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 const OPENAI_API_BASE = "https://openrouter.ai/api/v1";
-const OPENROUTER_MODEL = "anthropic/claude-3-haiku:free"; // or "gpt-3.5-turbo"
+const OPENROUTER_MODEL = "deepseek/deepseek-r1-zero:free"; // or "gpt-3.5-turbo"
 
 
 // CORS headers to allow all headers

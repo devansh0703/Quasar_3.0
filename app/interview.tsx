@@ -147,7 +147,7 @@ export default function Interview() {
               onChange={(e) => setDuration(parseFloat(e.target.value))}
             />
           </label>
-          <button
+          <button 
             onClick={startInterview}
             className="bg-blue-500 text-white py-2 px-4 rounded"
           >

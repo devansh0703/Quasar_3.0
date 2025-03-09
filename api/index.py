@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -177,6 +178,9 @@ class InterviewAnalysisSystem:
             f.write(f"Comfortable: {avg_comfortable:.2f}%\n")
             f.write(f"Cheating Score: {avg_cheating:.2f}%\n")
             f.write(f"Multiple People Detected: {multi_face_duration:.2f}% of the time\n")
+
+# Serve static files
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 @app.post("/api/py/expression")
 async def analyze_expression(video: UploadFile = File(...)):

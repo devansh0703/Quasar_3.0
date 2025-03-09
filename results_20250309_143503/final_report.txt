@@ -1,0 +1,5 @@
+Confidence: 24.77%
+Nervousness: 26.17%
+Comfortable: 96.56%
+Cheating Score: 1.80%
+Multiple People Detected: 0.00% of the time
