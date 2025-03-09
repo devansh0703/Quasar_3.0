@@ -50,17 +50,19 @@ def textual_analysis(data):
         ###INSTRUCTION
         Extract and structure the following resume text into a well-formatted JSON object with these fields:
     
-    1) Personal Details: Name, Email, Phone, Profile URLs  
-    2) Self Summary  
-    3) Work Experience: Job Title, Job Duration, Job Description  
-    4) Projects: Project Title, Project URL  
-    5) Education Details: Duration, Institute Name, Course Name, Score/GPA (if available)  
-    6) Achievements: Title, Description  
-    7) Certifications: Title, Description, Expiry Date (if available)  
-    8) Skills: Categorized as Technical Skills and Soft Skills  
-    9) Languages  
-    10) Interests  
-
+    1) Should he be taken into a company of Cyber Security, Data Science, or Software Development.
+    2) Personal Details: Name, Email, Phone, Profile URLs  
+    3) Self Summary  
+    4) Work Experience: Job Title, Job Duration, Job Description  
+    5) Projects: Project Title, Project URL  
+    6) Education Details: Duration, Institute Name, Course Name, Score/GPA (if available)  
+    7) Achievements: Title, Description  
+    8) Certifications: Title, Description, Expiry Date (if available)  
+    9) Skills: Categorized as Technical Skills and Soft Skills  
+    10) Languages  
+    11) Interests  
+    
+    
     Return only a valid JSON response without any additional text.
         ### VALID JSON (NO PREAMBLE):
         """

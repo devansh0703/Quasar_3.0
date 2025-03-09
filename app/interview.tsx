@@ -2,24 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-/**
- * Note: This Interview component expects that you have created the following API endpoints:
- * 
- * POST /api/record/start 
- *   - Starts recording using SoX and returns { message: "Recording started" }.
- * 
- * POST /api/record/stop 
- *   - Stops recording and returns { message: "Recording stopped", filePath: string }.
- * 
- * POST /api/transcribe 
- *   - Expects { filePath } in the JSON body and returns { transcript: string }.
- * 
- * POST /api/interview/question 
- *   - Expects { jobDescription, history, questionCount } in the JSON body and returns { question: string }.
- * 
- * The server endpoints must handle CORS and use your hardcoded API keys for OpenRouter and AssemblyAI.
- */
-
 export default function Interview() {
   const [duration, setDuration] = useState<number>(0);
   const [question, setQuestion] = useState<string>("");
@@ -30,14 +12,19 @@ export default function Interview() {
   const [isInterviewStarted, setIsInterviewStarted] = useState<boolean>(false);
   const [interviewEndTime, setInterviewEndTime] = useState<number>(0);
 
-  // Update timer every second
+  // New states for final evaluation
+  const [candidateFeedback, setCandidateFeedback] = useState<string>("");
+  const [moderatorEvaluation, setModeratorEvaluation] = useState<any>(null);
+
+  // Update timer every second; stop when timeRemaining hits 0
   useEffect(() => {
     let timer: NodeJS.Timer;
     if (isInterviewStarted && duration > 0) {
       timer = setInterval(() => {
         const remaining = interviewEndTime - Date.now();
-        setTimeRemaining(Math.max(0, Math.floor(remaining / 1000)));
-        if (remaining <= 10000) {
+        const seconds = Math.max(0, Math.floor(remaining / 1000));
+        setTimeRemaining(seconds);
+        if (seconds <= 0) {
           clearInterval(timer);
           endInterview();
         }
@@ -60,14 +47,17 @@ export default function Interview() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          jobDescription:
-            "Looking for a Full stack with strong problem-solving skills and experience",
+          jobDescription: "Looking for a Full stack with strong problem-solving skills and experience",
           history,
           questionCount,
         }),
       });
       const data = await res.json();
-      setQuestion(data.question);
+      if (data.question) {
+        setQuestion(data.question);
+      } else {
+        console.error("No question returned or error:", data);
+      }
     } catch (error) {
       console.error("Error generating question", error);
     }
@@ -94,8 +84,12 @@ export default function Interview() {
       });
       const transData = await transRes.json();
       setTranscript(transData.transcript);
+
+      // Add Q&A to history
       setHistory((prev) => [...prev, { question, answer: transData.transcript }]);
       setQuestionCount((prev) => prev + 1);
+
+      // If time remains (more than 10 sec left), generate the next question
       if (Date.now() < interviewEndTime - 10000) {
         await generateNextQuestion();
       }
@@ -104,9 +98,39 @@ export default function Interview() {
     }
   }
 
+  async function finalizeInterview() {
+    try {
+      const res = await fetch("/api/interview/question", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "evaluate", // triggers the evaluation logic on the server
+          jobDescription: "Looking for a Full stack with strong problem-solving skills and experience",
+          history, // entire interview Q&A
+          questionCount, // can be ignored by evaluation
+        }),
+      });
+      const data = await res.json();
+
+      // Store final results in state
+      setCandidateFeedback(data.candidateFeedback || "");
+      setModeratorEvaluation(data.moderatorEvaluation || null);
+
+      console.log("Candidate Feedback:", data.candidateFeedback);
+      console.log("Moderator Evaluation:", data.moderatorEvaluation);
+    } catch (error) {
+      console.error("Error during final evaluation", error);
+    }
+  }
+
   async function endInterview() {
-    alert("Interview ended. Check the console for history.");
+    alert("Interview ended. Finalizing evaluation...");
     console.log("Interview History:", history);
+    await finalizeInterview();
+    // Mark interview as ended
+    setIsInterviewStarted(false);
+    setQuestion("Interview Complete");
+    setTranscript("");
   }
 
   return (
@@ -123,7 +147,10 @@ export default function Interview() {
               onChange={(e) => setDuration(parseFloat(e.target.value))}
             />
           </label>
-          <button onClick={startInterview} className="bg-blue-500 text-white py-2 px-4 rounded">
+          <button
+            onClick={startInterview}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
             Start Interview
           </button>
         </div>
@@ -137,10 +164,16 @@ export default function Interview() {
             </h2>
           </div>
           <div className="flex space-x-4">
-            <button onClick={handleStartRecording} className="bg-green-500 text-white py-2 px-4 rounded">
+            <button
+              onClick={handleStartRecording}
+              className="bg-green-500 text-white py-2 px-4 rounded"
+            >
               Start Recording
             </button>
-            <button onClick={handleStopRecording} className="bg-red-500 text-white py-2 px-4 rounded">
+            <button
+              onClick={handleStopRecording}
+              className="bg-red-500 text-white py-2 px-4 rounded"
+            >
               Stop Recording
             </button>
           </div>
@@ -163,6 +196,22 @@ export default function Interview() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* AFTER the interview ends, we can show the final results if they exist */}
+      {!isInterviewStarted && candidateFeedback && (
+        <div className="w-full max-w-md mt-6 p-4 border border-gray-300 rounded">
+          <h2 className="text-xl font-bold mb-2">Final Candidate Feedback</h2>
+          <p className="mb-4 whitespace-pre-line">{candidateFeedback}</p>
+          {moderatorEvaluation && (
+            <div>
+              <h2 className="text-xl font-bold mb-2">Moderator Evaluation</h2>
+              <pre className="bg-gray-100 p-2 rounded">
+                {JSON.stringify(moderatorEvaluation, null, 2)}
+              </pre>
+            </div>
+          )}
         </div>
       )}
     </main>
