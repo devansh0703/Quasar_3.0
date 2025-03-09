@@ -60,17 +60,17 @@ export default function Home() {
     if (!data) return null;
     return (
       <div className="mt-4">
-        <h2 className="text-xl font-semibold">Analysis Results</h2>
-        <div className="bg-gray-100 p-8 rounded mt-2">
+        <h2 className="text-2xl font-semibold mb-4">Analysis Results</h2>
+        <div className="bg-gray-800 shadow-md rounded-lg p-6">
           {Object.entries(data).map(([key, value]) => (
-            <div key={key} style={{ marginBottom: "10px" }}>
-              <strong>{key.replace(/_/g, ' ')}:</strong>
+            <div key={key} className="mb-4">
+              <h3 className="text-lg font-bold text-gray-300">{key.replace(/_/g, ' ')}:</h3>
               {Array.isArray(value) ? (
                 value.map((item, index) => (
-                  <div key={index} style={{ marginLeft: "20px" }}>
+                  <div key={index} className="ml-4 text-gray-400">
                     {typeof item === "object" ? (
                       Object.entries(item).map(([subKey, subValue]) => (
-                        <div key={subKey}>
+                        <div key={subKey} className="ml-2">
                           <strong>{subKey.replace(/_/g, ' ')}:</strong> {subValue}
                         </div>
                       ))
@@ -81,12 +81,12 @@ export default function Home() {
                 ))
               ) : typeof value === "object" ? (
                 Object.entries(value).map(([subKey, subValue]) => (
-                  <div key={subKey} style={{ marginLeft: "20px" }}>
+                  <div key={subKey} className="ml-4 text-gray-400">
                     <strong>{subKey.replace(/_/g, ' ')}:</strong> {subValue}
                   </div>
                 ))
               ) : (
-                <span>{value}</span>
+                <span className="text-gray-400">{value}</span>
               )}
             </div>
           ))}
@@ -96,40 +96,48 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="w-full max-w-md">
-        <ExpressionAnalysis />
-        <Interview />
-        <h1 className="text-2xl font-bold mb-4">Resume Analyzer</h1>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          onChange={handleFileChange}
-          className="mb-4"
-        />
-        <button
-          onClick={handleUpload}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Upload & Analyze
-        </button>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-8">
+      <div className="w-full max-w-4xl">
+        <h1 className="text-4xl font-bold text-center text-gray-100 mb-8">Resume Analyzer</h1>
+        <div className="bg-gray-800 shadow-md rounded-lg p-6 mb-8">
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            className="mb-4 w-full p-2 border border-gray-700 rounded bg-gray-700 text-gray-300"
+          />
+          <button
+            onClick={handleUpload}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+          >
+            Upload & Analyze
+          </button>
+          {error && <p className="text-red-500 mt-4">{error}</p>}
+        </div>
         {renderAnalysisData(analysisData)}
-
-        {/* Display Images */}
         {imageUrls.length > 0 && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">Generated Analysis Images</h2>
-            {imageUrls.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt={`Analysis Image ${index + 1}`}
-                className="mt-2 rounded shadow-md"
-              />
-            ))}
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-100">Generated Analysis Images</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {imageUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Analysis Image ${index + 1}`}
+                  className="rounded shadow-md"
+                />
+              ))}
+            </div>
           </div>
         )}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-100">Expression Analysis</h2>
+          <ExpressionAnalysis />
+        </div>
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-100">Interview</h2>
+          <Interview />
+        </div>
       </div>
     </main>
   );

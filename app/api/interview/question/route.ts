@@ -1,4 +1,11 @@
 // app/api/interview/question/route.ts
+
+
+// Hardcoded API keys (for demonstration only)
+
+
+
+// app/api/interview/question/route.ts
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -6,7 +13,6 @@ import OpenAI from "openai";
 const OPENAI_API_KEY = "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";
 const OPENAI_API_BASE = "https://openrouter.ai/api/v1";
 const OPENROUTER_MODEL = "deepseek/deepseek-r1-zero:free"; // or "gpt-3.5-turbo"
-
 
 // CORS headers to allow all headers
 const corsHeaders = {
@@ -106,8 +112,14 @@ ${history
         scoreData = { error: "Error parsing score" };
       }
       
+      // Add image URLs to response (assuming images are served from /static)
+      const images = [
+        "/static/evaluation_chart.png",
+        "/static/performance.png",
+      ];
+
       return NextResponse.json(
-        { candidateFeedback: finalFeedback, moderatorEvaluation: scoreData },
+        { candidateFeedback: finalFeedback, moderatorEvaluation: scoreData, images },
         { headers: corsHeaders }
       );
     } catch (error) {
@@ -148,8 +160,12 @@ Generate ONE concise, relevant question for the candidate. DO NOT include any si
       temperature: 0.7,
     });
     const question = response.choices[0]?.message?.content || "Error: Could not generate question.";
+    
+    // Add a default image for interview question (assuming it exists in /static)
+    const images = ["/static/interview_question.png"];
+
     console.log("Full response:", response); // Log full response for debugging
-    return NextResponse.json({ question }, { headers: corsHeaders });
+    return NextResponse.json({ question, images }, { headers: corsHeaders });
   } catch (error) {
     console.error("Error generating question", error);
     return NextResponse.json(
@@ -158,4 +174,3 @@ Generate ONE concise, relevant question for the candidate. DO NOT include any si
     );
   }
 }
-

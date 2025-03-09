@@ -134,22 +134,22 @@ export default function Interview() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
+    <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-900 text-gray-100">
       {!isInterviewStarted ? (
         <div className="w-full max-w-md">
-          <h1 className="text-2xl font-bold mb-4">Interview Setup</h1>
+          <h1 className="text-2xl font-bold mb-4 text-white">Interview Setup</h1>
           <label className="block mb-4">
             Interview Duration (minutes):
             <input
               type="number"
-              className="border p-2 mt-2 w-full"
+              className="border p-2 mt-2 w-full bg-gray-800 border-gray-700 text-gray-300"
               value={duration}
               onChange={(e) => setDuration(parseFloat(e.target.value))}
             />
           </label>
           <button 
             onClick={startInterview}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
           >
             Start Interview
           </button>
@@ -166,13 +166,13 @@ export default function Interview() {
           <div className="flex space-x-4">
             <button
               onClick={handleStartRecording}
-              className="bg-green-500 text-white py-2 px-4 rounded"
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
             >
               Start Recording
             </button>
             <button
               onClick={handleStopRecording}
-              className="bg-red-500 text-white py-2 px-4 rounded"
+              className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
             >
               Stop Recording
             </button>
@@ -186,7 +186,7 @@ export default function Interview() {
           <div className="mt-4">
             <h3 className="text-lg font-semibold">Interview History</h3>
             {history.map((qa, idx) => (
-              <div key={idx} className="border p-2 my-2">
+              <div key={idx} className="border p-2 my-2 border-gray-700 rounded bg-gray-800">
                 <p>
                   <strong>Q:</strong> {qa.question}
                 </p>
@@ -201,13 +201,13 @@ export default function Interview() {
 
       {/* AFTER the interview ends, we can show the final results if they exist */}
       {!isInterviewStarted && candidateFeedback && (
-        <div className="w-full max-w-md mt-6 p-4 border border-gray-300 rounded">
+        <div className="w-full max-w-md mt-6 p-4 border border-gray-700 rounded bg-gray-800">
           <h2 className="text-xl font-bold mb-2">Final Candidate Feedback</h2>
           <p className="mb-4 whitespace-pre-line">{candidateFeedback}</p>
           {moderatorEvaluation && (
             <div>
               <h2 className="text-xl font-bold mb-2">Moderator Evaluation</h2>
-              <pre className="bg-gray-100 p-2 rounded">
+              <pre className="bg-gray-700 p-2 rounded text-gray-300">
                 {JSON.stringify(moderatorEvaluation, null, 2)}
               </pre>
             </div>

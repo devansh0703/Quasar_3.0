@@ -11,6 +11,7 @@ const ExpressionAnalysis: React.FC = () => {
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [report, setReport] = useState<string | null>(null);
+  const [jsonOutput, setJsonOutput] = useState<any>(null);
 
   const startRecording = async () => {
     try {
@@ -66,6 +67,7 @@ const ExpressionAnalysis: React.FC = () => {
           `${baseUrl}cheating_trends.png`,
         ]);
         setReport(data.report);
+        setJsonOutput(data);
       }
     } catch (error) {
       console.error("Error uploading video:", error);
@@ -73,20 +75,22 @@ const ExpressionAnalysis: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1 className="flex justify-center text-xl">Expression Analysis</h1>
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        width={640}
-        height={480}
-        style={{ background: "#000" }}
-      ></video>
-      <div style={{ marginTop: "10px" }}>
+    <div className="p-8 font-sans bg-gray-900 min-h-screen">
+      <h1 className="text-3xl font-bold text-center text-gray-100 mb-8">Expression Analysis</h1>
+      <div className="flex justify-center mb-8">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          width={640}
+          height={480}
+          className="bg-black rounded"
+        ></video>
+      </div>
+      <div className="flex justify-center mb-8">
         {recording ? (
           <button 
-            className="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 rounded-lg text-white flex justify-center items-center space-x-2"
+            className="bg-gradient-to-r from-red-500 via-purple-500 to-pink-500 p-4 rounded-lg text-white flex justify-center items-center space-x-2 hover:from-red-600 hover:via-purple-600 hover:to-pink-600 transition"
             onClick={stopRecording}
           >
             <span>Stop Recording</span>
@@ -94,7 +98,7 @@ const ExpressionAnalysis: React.FC = () => {
           </button>
         ) : (
           <button 
-            className="bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 p-4 rounded-lg text-white flex justify-center items-center space-x-2"
+            className="bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 p-4 rounded-lg text-white flex justify-center items-center space-x-2 hover:from-green-600 hover:via-teal-600 hover:to-blue-600 transition"
             onClick={startRecording}
           >
             <span>Start Recording</span>
@@ -103,29 +107,38 @@ const ExpressionAnalysis: React.FC = () => {
         )}
       </div>
       {videoURL && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Recorded Video:</h3>
-          <video src={videoURL} controls width={640} height={480} />
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-100">Recorded Video:</h3>
+          <video src={videoURL} controls width={640} height={480} className="rounded shadow-md" />
         </div>
       )}
       {imageUrls.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Generated Analysis Images:</h3>
-          {imageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={`Analysis Image ${index + 1}`}
-              className="mt-2 rounded shadow-md"
-              style={{ maxWidth: "100%" }}
-            />
-          ))}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-100">Generated Analysis Images:</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {imageUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Analysis Image ${index + 1}`}
+                className="rounded shadow-md"
+              />
+            ))}
+          </div>
         </div>
       )}
       {report && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Analysis Report:</h3>
-          <pre className="bg-gray-100 p-10 rounded mt-2">{report}</pre>
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-100">Analysis Report:</h3>
+          <pre className="bg-gray-800 p-6 rounded shadow-md text-gray-300">{report}</pre>
+        </div>
+      )}
+      {jsonOutput && (
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-100">JSON Output:</h3>
+          <pre className="bg-gray-800 p-6 rounded shadow-md text-gray-300">
+            {JSON.stringify(jsonOutput, null, 2)}
+          </pre>
         </div>
       )}
     </div>
